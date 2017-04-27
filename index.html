@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/app.css"></link>
+		<meta charset="UTF-8">
+		<title>Game App</title>
+	</head>
+	<body>
+		<div class="container" ng-app="gameApp">
+			<div class="row" ng-controller="gameCtrl">
+				<div class="col-md-10">
+					<div class="row">
+						<div class="col-md-3 col-sm-3 col-xs-6 items-container" ng-repeat="cartItem in gameModel.gameData track by $index">
+							<div>
+								<img ng-src="{{cartItem.Image}}" class="img-responsive center-block" alt="Responsive image">
+							</div>
+							<div class="text-center">
+								{{cartItem.Name}}
+							</div>
+							<div>
+								<span class="col-xs-6 text-center""><b>{{cartItem.Price}}</b></span>
+								<span class="col-xs-6 text-center"">({{cartItem.UnitPrice}})</span>
+							</div>
+							<div>
+								<span class="col-xs-8">
+									<button class="glyphicon glyphicon-minus col-xs-4"></button>
+									<input type="text" 
+									class="col-xs-4" ng-model="cartItem.BasketQty">
+									<button class="glyphicon glyphicon-plus col-xs-4"></button>
+								</span>
+								<span class="col-xs-4">
+									<button type="button" class="btn btn-primary btn-xs">Add</button>
+								</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="col-md-2">
+					Basket
+				</div>
+			</div>
+		</div>
+
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+		<!-- Latest compiled and minified JavaScript -->
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+		<script type="text/javascript" src="scripts/app.js"></script>
+		<script type="text/javascript" src="scripts/controllers/gameController.js"></script>
+		<script type="text/javascript" src="scripts/models/gameModel.js"></script>
+		<script type="text/javascript" src="scripts/services/gameService.js"></script>
+	</body>
+</html>
