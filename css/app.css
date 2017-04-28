@@ -5,3 +5,15 @@
 	padding: 1rem;
 	height: 28rem;
 }
+.normal-border {
+	border: 1px solid #000;
+}
+.height-100pc {
+	height: 100%;
+}
+.width-100pc {
+	width: 100%;
+}
+html {
+	height: 100%;
+}

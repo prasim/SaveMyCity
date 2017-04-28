@@ -4,7 +4,7 @@
 		'$http',
 		function($http) {
 			this.getGameData = function() {
-				return $http.get('../runitMan/data.json').success(function(data) {
+				return $http.get('../data.json').success(function(data) {
 					return data;
 				})
 			};
