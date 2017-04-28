@@ -5,40 +5,11 @@
 		<meta charset="UTF-8">
 		<title>Game App</title>
 	</head>
-	<body>
-		<div class="container" ng-app="gameApp">
-			<div class="row" ng-controller="gameCtrl">
-				<div class="col-md-10">
-					<div class="row">
-						<div class="col-md-3 col-sm-3 col-xs-6 items-container" ng-repeat="cartItem in gameModel.gameData track by $index">
-							<div>
-								<img ng-src="{{cartItem.Image}}" class="img-responsive center-block" alt="Responsive image">
-							</div>
-							<div class="text-center">
-								{{cartItem.Name}}
-							</div>
-							<div>
-								<span class="col-xs-6 text-center""><b>{{cartItem.Price}}</b></span>
-								<span class="col-xs-6 text-center"">({{cartItem.UnitPrice}})</span>
-							</div>
-							<div>
-								<span class="col-xs-8">
-									<button class="glyphicon glyphicon-minus col-xs-4"></button>
-									<input type="text" 
-									class="col-xs-4" ng-model="cartItem.BasketQty">
-									<button class="glyphicon glyphicon-plus col-xs-4"></button>
-								</span>
-								<span class="col-xs-4">
-									<button type="button" class="btn btn-primary btn-xs">Add</button>
-								</span>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="col-md-2">
-					Basket
-				</div>
-			</div>
+	<body class="height-100pc">
+		<div class="height-100pc container-fluid" ng-app="gameApp" ng-controller="gameCtrl">
+			<canvas class="normal-border height-100pc width-100pc">
+				
+			</canvas>
 		</div>
 
 
@@ -50,6 +21,7 @@
 		<script type="text/javascript" src="scripts/controllers/gameController.js"></script>
 		<script type="text/javascript" src="scripts/models/gameModel.js"></script>
 		<script type="text/javascript" src="scripts/services/gameService.js"></script>
-		<script src="openLayers.js"></script>
+		<script type="text/javascript" src="scripts/canvas/game.js"></script>
+		<!-- <script src="openLayers.js"></script> -->
 	</body>
 </html>
