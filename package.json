@@ -1,0 +1,23 @@
+{
+  "name": "savemycity",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.html",
+  "dependencies": {
+    "openlayers": "^4.1.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/prasim/SaveMyCity.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/prasim/SaveMyCity/issues"
+  },
+  "homepage": "https://github.com/prasim/SaveMyCity#readme"
+}
