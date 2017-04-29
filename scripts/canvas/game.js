@@ -229,7 +229,7 @@ function drawButton (name) {
 	
 	// Drawing Button Text
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "16px Helvetica";
+	ctx.font = "16px Times New Roman";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText(name, rect.x + 20, rect.y + 15);
@@ -238,7 +238,7 @@ function drawButton (name) {
 
 function makeButton (name, y, onClick) {
 	var rect = {
-		x:1370,
+		x:1375,
 		y:y,
 		width:155,
 		height:50,
@@ -385,7 +385,7 @@ var render = function () {
 	
 	// Current Situation of the City 
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "16px Helvetica";
+	ctx.font = "16px Times New Roman";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText("Population: " + city.currentPopulation, 16, 16);
