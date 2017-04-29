@@ -103,6 +103,14 @@ var water = {
 	y: 560
 };
 
+var lifeLine = {
+	progress: 0,
+	low: 0,
+	speed: 0.01,
+	backgroundColor: "#000000",
+	lifeLineColor: "#008000"
+};
+
 var player = {
 	speed: 128, // movement in pixels per second
 	x: canvas.width/2,
@@ -172,6 +180,12 @@ function getMousePos(canvas, evt) {
 
 // Moving the Ball
 var update = function (modifier) {
+	var life = lifeLine.progress + (lifeLine.speed * modifier);
+	if (life <= 1) {
+		lifeLine.progress = life;
+	} else {
+		lifeLine.progress = lifeLine.low;
+	}
 	var level = water.y + (water.speed * modifier);
 	if (level < water.xLow) {
 		water.y = level;
@@ -235,7 +249,7 @@ var render = function () {
 		}
 	}
 	
-	ctx.globalAlpha = 0.5;
+	ctx.globalAlpha = 0.8;
 	
 	if (waterReady) {
 		ctx.drawImage(waterImage, water.x, water.y);
@@ -262,6 +276,15 @@ var render = function () {
 	    rect.fillRect(button.left, button.top, button.width, button.height);
 	    rect.fillText(button.text,32,32);
 	});
+	
+	// Life Line
+    var grad = ctx.createLinearGradient(0, 0, 1400, 0);
+    grad.addColorStop(0, lifeLine.lifeLineColor);
+    grad.addColorStop(lifeLine.progress, lifeLine.lifeLineColor);
+	grad.addColorStop(lifeLine.progress, lifeLine.backgroundColor);
+	grad.addColorStop(1, lifeLine.backgroundColor);
+    ctx.fillStyle = grad;
+    ctx.fillRect(16, 50, 1400, 25);
 };
 
 // The main game loop
