@@ -96,8 +96,11 @@ var aTallBuildings = [ {
 }];
 
 var water = {
+	speed: 1,
+	xHigh: 560,
+	xLow: 768,
 	x: 0,
-	y: 600
+	y: 560
 };
 
 var player = {
@@ -133,6 +136,12 @@ function getMousePos(canvas, evt) {
 
 // Moving the Ball
 var update = function (modifier) {
+	var level = water.y + (water.speed * modifier);
+	if (level < water.xLow) {
+		water.y = level;
+	} else {
+		water.y = water.xHigh;
+	}
 	var distance = ball.speed * modifier;
 	if(ball.y<640){
 		ball.y += distance;
