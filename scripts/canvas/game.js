@@ -32,6 +32,30 @@ waterImage.onload = function () {
 };
 waterImage.src = imgFolder + "Water4.png";
 
+// Windmill image
+var windmillReady = false;
+var windmillImage = new Image();
+windmillImage.onload = function () {
+	windmillReady = true;
+};
+windmillImage.src = imgFolder + "WindMill.png";
+
+// Tree image
+var treeReady = false;
+var treeImage = new Image();
+treeImage.onload = function () {
+	treeReady = true;
+};
+treeImage.src = imgFolder + "tree.png";
+
+// Solar Panel image
+var solarPanelReady = false;
+var solarPanelImage = new Image();
+solarPanelImage.onload = function () {
+	solarPanelReady = true;
+};
+solarPanelImage.src = imgFolder + "solarPanel.png";
+
 // Medium Building image
 var mediumBuildingReady = false;
 var mediumBuildingImage = new Image();
@@ -107,8 +131,6 @@ var water = {
 
 var lifeLine = {
 	progress: 0,
-	low: 0,
-	speed: 0.1,
 	backgroundColor: "#000000",
 	lifeLineColor: "#008000"
 };
@@ -175,7 +197,6 @@ var addBuildings = function (iNoOfBuildings) {
 
 var updateNoOfBuildings = function (iNoOfBuildings) {
 	buildings.iNoOfBuildings = iNoOfBuildings;
-	addBuildings(iNoOfBuildings);
 };
 
 var retriveNoOfBuildings = function () {
@@ -201,6 +222,10 @@ var updateWaterLevelValue = function (waterLevel) {
 
 var updateMoney = function (money) {
 	city.currentMoney = money;
+};
+
+var updateProgressBar = function (percentage) {
+	lifeLine.progress = (percentage / 100);
 };
 
 // --------------------- API functions for updating the Canvas Ends ------------------------
@@ -282,13 +307,7 @@ canvas.addEventListener('mousemove', function(evt) {
 
 // Moving the Ball
 var update = function (modifier) {
-	var life = lifeLine.progress + (lifeLine.speed * modifier);
-	if (life <= 1) {
-		lifeLine.progress = life;
-	} else {
-		lifeLine.progress = lifeLine.low;
-	}
-
+	
 	/*cars Movement*/
 	aCars.forEach(function(car) {
 		if(car.direction == 'left'){
@@ -317,6 +336,7 @@ var render = function () {
 	}
 	
 	addBuildings(buildings.iNoOfBuildings);
+	updateProgressBar(10);
 	updateWaterLevel(50);
 	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
@@ -393,14 +413,18 @@ var render = function () {
 	ctx.fillText("Water Level: " + city.currentWaterLevel, 16, 64);
 	ctx.fillText("Money: " + city.currentMoney, 16, 88);
 	
+	// Life Line Text
+	ctx.font = "32px Times New Roman";
+	ctx.fillText("Your Life Line", 630, 16);
+	
 	// Life Line
-    var grad = ctx.createLinearGradient(0, 0, 600, 0);
+    var grad = ctx.createLinearGradient(450, 0, 1050, 0);
     grad.addColorStop(0, lifeLine.lifeLineColor);
     grad.addColorStop(lifeLine.progress, lifeLine.lifeLineColor);
 	grad.addColorStop(lifeLine.progress, lifeLine.backgroundColor);
 	grad.addColorStop(1, lifeLine.backgroundColor);
     ctx.fillStyle = grad;
-    ctx.fillRect(300, 50, 600, 25);
+    ctx.fillRect(450, 50, 600, 25);
 };
 
 // ----------------------------- Canvas Rendering Ends -------------------------------------
