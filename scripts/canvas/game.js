@@ -81,6 +81,11 @@ var aCars = [{
 	direction: 'right',
 },
 {
+	x:50,
+	y:487,
+	direction: 'right',
+},
+{
 	x:canvas.width,
 	y:515,
 	direction: 'left',
@@ -338,4 +343,3 @@ requestAnimationFrame = w.requestAnimationFrame || w.webkitRequestAnimationFrame
 
 // Let's play this game!
 var then = Date.now();
-main();

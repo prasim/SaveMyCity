@@ -21,9 +21,17 @@ html {
 	padding-right: 0px !important;
     padding-left: 0px !important;
 }
-progress {
+.progress {
   background-color: #f3f3f3;
   border: 0;
   height: 18px;
   border-radius: 9px;
+}
+.align-vert-hori {
+	position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%,-50%);
+    -ms-transform: translate(-50%,-50%);
+    transform: translate(-50%,-50%);
 }

@@ -7,7 +7,16 @@
 	</head>
 	<body class="height-100pc">
 		<div class="height-100pc container-fluid" ng-app="gameApp" ng-controller="gameCtrl">
-			<canvas class="normal-border height-100pc width-100pc">
+			<div ng-show="canvasDisabled" class="height-100pc">
+				<div class="col-md-4 text-center align-vert-hori">
+					<div class="progress" ng-class="{'invisible':hideProgress}">
+					  <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar" aria-valuenow="{{progressPercentage}}" aria-valuemin="0" aria-valuemax="100"  ng-style="{ 'width' : progressPercentage}">
+					  </div>
+					</div>
+					<button class="btn btn-primary btn-lg btn-block " ng-disabled="!hideProgress" ng-click="startTheGame()">START THE GAME</button>
+				</div>
+			</div>
+			<canvas ng-hide="canvasDisabled" class="normal-border height-100pc width-100pc">
 				
 			</canvas>
 		</div>
@@ -23,10 +32,8 @@
 		<script type="text/javascript" src="scripts/models/gameAlgorithms.js"></script>
 		<script type="text/javascript" src="scripts/services/gameService.js"></script>
 		<script type="text/javascript" src="scripts/canvas/game.js"></script>
-		<script> 
-			
-		
-		</script>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="//code.jquery.com/ui/1.11.1/jquery-ui.min.js"></script>
 		<!-- <script src="openLayers.js"></script> -->
 	</body>
 </html>
