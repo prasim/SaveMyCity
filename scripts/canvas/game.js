@@ -113,14 +113,12 @@ var lifeLine = {
 	lifeLineColor: "#008000"
 };
 
-var rect = {
-    x:250,
-    y:350,
-    width:200,
-    height:100
-};
+var oButtons = {};
 
-var ballsTouched = 0;
+var bTreeButton = true;
+var bSolarCarsButton = true;
+var bWindmillButton = true;
+var bSolarPanelButton = true;
 var direction;
 
 // --------------------- Game Objects End -------------------------
@@ -209,12 +207,10 @@ var updateMoney = function (money) {
 
 // --------------------- UI Actions --------------------------------
 
-/* // Handle mouse position
-var mousePos;
-addEventListener('mousemove', function(evt) {
-    mousePos = getMousePos(canvas, evt);
-    player.x=mousePos.x;
-  }, false);
+//Function to check whether a point is inside a rectangle
+function isInside(pos, rect){
+    return pos.x > rect.x && pos.x < rect.x+rect.width && pos.y < rect.y+rect.height && pos.y > rect.y
+}
 
 // Mouse Position
 function getMousePos(canvas, evt) {
@@ -223,7 +219,64 @@ function getMousePos(canvas, evt) {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
     };
-  } */
+  }
+  
+function drawButton (name) {
+	var rect = oButtons[name];
+	// Drawing Button Area
+	ctx.fillStyle = rect.color;
+	ctx.fillRect(rect.x, rect.y, rect.width, rect.height);
+	
+	// Drawing Button Text
+	ctx.fillStyle = "rgb(250, 250, 250)";
+	ctx.font = "16px Helvetica";
+	ctx.textAlign = "left";
+	ctx.textBaseline = "top";
+	ctx.fillText(name, rect.x + 20, rect.y + 15);
+	
+}
+
+function makeButton (name, y, onClick) {
+	var rect = {
+		x:1370,
+		y:y,
+		width:155,
+		height:50,
+		onClick: onClick,
+		color: "#ff0000"
+	};
+	
+	oButtons[name] = rect;
+	
+	//Binding the click event on the canvas
+	canvas.addEventListener('click', function(evt) {
+		var mousePos = getMousePos(canvas, evt);
+
+		if (isInside(mousePos,rect)) {
+			onClick();
+		}   
+	}, false);
+}
+
+canvas.addEventListener('mousemove', function(evt) {
+		var mousePos = getMousePos(canvas, evt);
+		
+		var bInside = false;
+		for (var name in oButtons) {
+			if (isInside(mousePos,oButtons[name])) {
+				oButtons[name].color = "#000000";
+				bInside = true;
+			} else {
+				oButtons[name].color = "#ff0000";
+			}
+		}
+		
+		if (bInside) {
+			canvas.classList.add("cursorOnHover");
+		} else {
+			canvas.classList.remove("cursorOnHover");
+		}
+	}, false);
 
 // --------------------- UI Actions Ends --------------------------------
 
@@ -269,6 +322,30 @@ var render = function () {
 	updateTemperature("26 degrees");
 	updateWaterLevelValue("60,000 feet");
 	updateMoney("20,000 dollars");
+	
+	if(bTreeButton) {
+		makeButton("Add Trees", 16, function () {console.log("tree");});
+		bTreeButton = false;
+	}
+	drawButton("Add Trees");
+	
+	if(bWindmillButton) {
+		makeButton("Add Windmill", 74, function () {console.log("windmill");});
+		bWindmillButton = false;
+	}
+	drawButton("Add Windmill");
+	
+	if(bSolarPanelButton) {
+		makeButton("Add Solar Panel", 132, function () {console.log("solar panel");});
+		bSolarPanelButton = false;
+	}
+	drawButton("Add Solar Panel");
+	
+	if(bSolarCarsButton) {
+		makeButton("Add Solar Cars", 190, function () {console.log("solar cars");});
+		bSolarCarsButton = false;
+	}
+	drawButton("Add Solar Cars");
 	
 	// Draw Tall Buildings
 	for (var i=0; i<aTallBuildings.length; i++) {
@@ -317,13 +394,13 @@ var render = function () {
 	ctx.fillText("Money: " + city.currentMoney, 16, 88);
 	
 	// Life Line
-    var grad = ctx.createLinearGradient(0, 0, 1100, 0);
+    var grad = ctx.createLinearGradient(0, 0, 600, 0);
     grad.addColorStop(0, lifeLine.lifeLineColor);
     grad.addColorStop(lifeLine.progress, lifeLine.lifeLineColor);
 	grad.addColorStop(lifeLine.progress, lifeLine.backgroundColor);
 	grad.addColorStop(1, lifeLine.backgroundColor);
     ctx.fillStyle = grad;
-    ctx.fillRect(300, 50, 1100, 25);
+    ctx.fillRect(300, 50, 600, 25);
 };
 
 // ----------------------------- Canvas Rendering Ends -------------------------------------
