@@ -56,43 +56,24 @@ smallBuildingImage.onload = function () {
 };
 smallBuildingImage.src = imgFolder + "BuildingSmall.png";
 
-// Hero image
-var playerReady = false;
-var playerImage = new Image();
-playerImage.onload = function () {
-	playerReady = true;
-};
-playerImage.src = imgFolder + "lol.png";
-
-// Monster image
-var ballReady = false;
-var ballImage = new Image();
-ballImage.onload = function () {
-	ballReady = true;
-};
-ballImage.src = imgFolder + "silverball.png";
 
 // --------------------- Images End ------------------------
 
 // --------------------- Game Objects -------------------------
 
-var aMediumBuildings = [ {
-	x: 707,
-	y: 350
-},
-{
-	x: 760,
-	y: 350
-}];
+var buildings = {
+	iNoOfBuildings: 0,
+	threshold: 10,
+	smallBuildingValue: 1,
+	mediumBuildingValue: 2,
+	tallBuildingValue: 5
+};
 
-var aSmallBuildings = [ {
-	x: 700,
-	y: 400
-},
-{
-	x: 753,
-	y: 400
-}];
+var aMediumBuildings = [];
+
+var aSmallBuildings = [];
+
+var aTallBuildings = [];
 
 var aCars = [{
 	x:0,
@@ -103,15 +84,6 @@ var aCars = [{
 	x:canvas.width,
 	y:515,
 	direction: 'left',
-}];
-
-var aTallBuildings = [ {
-	x: 700,
-	y: 250
-},
-{
-	x: 753,
-	y: 250
 }];
 
 var water = {
@@ -125,21 +97,11 @@ var water = {
 var lifeLine = {
 	progress: 0,
 	low: 0,
-	speed: 0.01,
+	speed: 0.1,
 	backgroundColor: "#000000",
 	lifeLineColor: "#008000"
 };
 
-var player = {
-	speed: 128, // movement in pixels per second
-	x: canvas.width/2,
-	y: 610
-};
-var ball = {
-	speed: 128,
-	y: 0,
-	x: 50
-};
 var rect = {
     x:250,
     y:350,
@@ -160,6 +122,64 @@ var direction;
 
 // --------------------- Game Objects End -------------------------
 
+// --------------------- API functions for updating the Canvas ------------------------
+
+// Adding buildings to the canvas
+var addBuildings = function (iNoOfBuildings) {
+	var currentBuildings = iNoOfBuildings;
+	// Small Buildings
+	var small = Math.min(Math.ceil(iNoOfBuildings / buildings.smallBuildingValue), buildings.threshold);
+	aSmallBuildings.splice(0, aSmallBuildings.length);
+	var smallBuildings = 250;
+	for (var i = 0; i < small; i++) {
+		aSmallBuildings.push({
+			x: smallBuildings,
+			y: (i % 2 === 0) ? 400 : 350
+		});
+		smallBuildings += 100;
+	}
+	currentBuildings -= buildings.smallBuildingValue * small;
+	
+	// Medium Buildings
+	var medium = Math.min(Math.ceil(currentBuildings / buildings.mediumBuildingValue), buildings.threshold);
+	aMediumBuildings.splice(0, aMediumBuildings.length);
+	var mediumBuildings = 300;
+	for (var i = 0; i < medium; i++) {
+		aMediumBuildings.push({
+			x: mediumBuildings,
+			y: (i % 2 !== 0) ? 350 : 300
+		});
+		mediumBuildings += 100;
+	}
+	currentBuildings -= buildings.mediumBuildingValue * medium;
+	
+	// Tall Buildings
+	var tall = Math.min(Math.ceil(currentBuildings / buildings.tallBuildingValue), buildings.threshold);
+	aTallBuildings.splice(0, aTallBuildings.length);
+	var tallBuildings = 250;
+	for (var i = 0; i < tall; i++) {
+		aTallBuildings.push({
+			x: tallBuildings,
+			y: (i % 2 === 0) ? 250 : 200
+		});
+		tallBuildings += 100;
+	}
+	currentBuildings -= buildings.tallBuildingValue * tall;
+	
+	if (currentBuildings > 0) {
+		buildings.threshold += 1;
+		addBuildings(currentBuildings);
+	}
+};
+
+var updateNoOfBuildings = function (iNoOfBuildings) {
+	buildings.iNoOfBuildings = iNoOfBuildings;
+	addBuildings(iNoOfBuildings);
+};
+
+// --------------------- API functions for updating the Canvas Ends ------------------------
+
+// --------------------- UI Actions --------------------------------
 var self= this;
 canvas.addEventListener('click', function(event) {
     var x = event.pageX - canvas.offsetLeft,
@@ -181,7 +201,7 @@ var addBuilding = function() {
 	});
 	smallBuildingsX += 50;  
 }
-// Handle mouse position
+/* // Handle mouse position
 var mousePos;
 addEventListener('mousemove', function(evt) {
     mousePos = getMousePos(canvas, evt);
@@ -195,7 +215,9 @@ function getMousePos(canvas, evt) {
       x: evt.clientX - rect.left,
       y: evt.clientY - rect.top
     };
-  }
+  } */
+
+// --------------------- UI Actions Ends --------------------------------
 
 // Moving the Ball
 var update = function (modifier) {
@@ -230,44 +252,17 @@ var update = function (modifier) {
         
     });
 
-	var distance = ball.speed * modifier;
-	if(ball.y<640){
-		ball.y += distance;
-	} else {
-		ball.y = 0;
-		ball.x = Math.random()*canvas.width;
-		direction = (Math.random()<0.5)?false:true;
-	}
-	if(direction){
-		if((ball.x + distance) <= 940) {
-			ball.x += distance;
-		} else {
-			direction=false;
-			ball.x -= distance;
-		}
-	} else {
-		if((ball.x - distance) >= 0) {
-			ball.x -= distance;
-		} else {
-			direction=true;
-			ball.x += distance;
-		}
-	}
-	// Are they touching?
-	//console.log(ball.y);
-	if (ball.x >= (player.x - 15) && (player.x + 91) >= ball.x && ball.y>=600 && ball.y<=602) {
-		++ballsTouched;
-		ball.y = 0;
-		ball.x = Math.random()*canvas.width;
-		direction = (Math.random()<0.5)?false:true;
-	}
 };
 
+// ----------------------------- Canvas Rendering -------------------------------------
 // Draw everything
 var render = function () {
 	if (bgReady) {
 		ctx.drawImage(bgImage, 0, 0);
 	}
+	
+	addBuildings(buildings.iNoOfBuildings);
+	updateNoOfBuildings(80);
 	
 	for (var i=0; i<aTallBuildings.length; i++) {
 		if (tallBuildingReady) {
@@ -299,13 +294,6 @@ var render = function () {
 	
 	ctx.globalAlpha = 1;
 	
-	if (playerReady) {
-		ctx.drawImage(playerImage, player.x, player.y);
-	}
-	
-	if (ballReady) {
-		ctx.drawImage(ballImage, ball.x, ball.y);
-	}
 	// Score
 	ctx.fillStyle = "rgb(250, 250, 250)";
 	ctx.font = "24px Helvetica";
@@ -328,6 +316,8 @@ var render = function () {
     ctx.fillStyle = grad;
     ctx.fillRect(16, 50, 1400, 25);
 };
+
+// ----------------------------- Canvas Rendering Ends -------------------------------------
 
 // The main game loop
 var main = function () {
