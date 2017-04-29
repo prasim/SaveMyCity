@@ -16,6 +16,14 @@ bgImage.onload = function () {
 };
 bgImage.src = imgFolder + "background.png";
 
+//Cars image
+var carsReady = false;
+var carsImage = new Image();
+carsImage.onload = function() {
+	carsReady = true;
+}
+carsImage.src = imgFolder + "smallCar.png";
+
 // Water image
 var waterReady = false;
 var waterImage = new Image();
@@ -84,6 +92,17 @@ var aSmallBuildings = [ {
 {
 	x: 753,
 	y: 400
+}];
+
+var aCars = [{
+	x:0,
+	y:487,
+	direction: 'right',
+},
+{
+	x:canvas.width,
+	y:515,
+	direction: 'left',
 }];
 
 var aTallBuildings = [ {
@@ -192,6 +211,25 @@ var update = function (modifier) {
 	} else {
 		water.y = water.xHigh;
 	}
+
+	/*cars Movement*/
+	aCars.forEach(function(car) {
+		if(car.direction == 'left'){
+			if (car.x < canvas.width) {
+        		car.x = car.x+1;
+	        } else {
+	        	car.x = 0;
+	        }
+		}else {
+			if (car.x > 0) {
+        		car.x = car.x-1;
+	        } else {
+	        	car.x = canvas.width;
+	        }			
+		}
+        
+    });
+
 	var distance = ball.speed * modifier;
 	if(ball.y<640){
 		ball.y += distance;
@@ -236,7 +274,11 @@ var render = function () {
 			ctx.drawImage(tallBuildingImage, aTallBuildings[i].x, aTallBuildings[i].y);
 		}
 	}
-	
+	for (var i=0; i<aCars.length; i++) {
+		if (carsReady) {
+			ctx.drawImage(carsImage, aCars[i].x, aCars[i].y, 25, 25);
+		}
+	}
 	for (var i=0; i<aMediumBuildings.length; i++) {
 		if (mediumBuildingReady) {
 			ctx.drawImage(mediumBuildingImage, aMediumBuildings[i].x, aMediumBuildings[i].y);
