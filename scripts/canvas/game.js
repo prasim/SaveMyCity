@@ -92,7 +92,6 @@ var aCars = [{
 }];
 
 var water = {
-	speed: 1,
 	xHigh: 560,
 	xLow: 768,
 	x: 0,
@@ -182,6 +181,15 @@ var updateNoOfBuildings = function (iNoOfBuildings) {
 	addBuildings(iNoOfBuildings);
 };
 
+var retriveNoOfBuildings = function () {
+	return buildings.iNoOfBuildings;
+};
+
+var updateWaterLevel = function (percentage) {
+	var unitWaterLevel = (water.xLow - water.xHigh) / 100;
+	water.y = water.xLow - (unitWaterLevel * percentage);
+};
+
 // --------------------- API functions for updating the Canvas Ends ------------------------
 
 // --------------------- UI Actions --------------------------------
@@ -232,12 +240,6 @@ var update = function (modifier) {
 	} else {
 		lifeLine.progress = lifeLine.low;
 	}
-	var level = water.y + (water.speed * modifier);
-	if (level < water.xLow) {
-		water.y = level;
-	} else {
-		water.y = water.xHigh;
-	}
 
 	/*cars Movement*/
 	aCars.forEach(function(car) {
@@ -267,27 +269,33 @@ var render = function () {
 	}
 	
 	addBuildings(buildings.iNoOfBuildings);
-	//updateNoOfBuildings(40);
+	updateWaterLevel(50);
 	
+	// Draw Tall Buildings
 	for (var i=0; i<aTallBuildings.length; i++) {
 		if (tallBuildingReady) {
 			ctx.drawImage(tallBuildingImage, aTallBuildings[i].x, aTallBuildings[i].y);
 		}
 	}
-	for (var i=0; i<aCars.length; i++) {
-		if (carsReady) {
-			ctx.drawImage(carsImage, aCars[i].x, aCars[i].y, 25, 25);
-		}
-	}
+	
+	// Draw Medium Buildings
 	for (var i=0; i<aMediumBuildings.length; i++) {
 		if (mediumBuildingReady) {
 			ctx.drawImage(mediumBuildingImage, aMediumBuildings[i].x, aMediumBuildings[i].y);
 		}
 	}
 	
+	// Draw Small Buildings
 	for (var i=0; i<aSmallBuildings.length; i++) {
 		if (smallBuildingReady) {
 			ctx.drawImage(smallBuildingImage, aSmallBuildings[i].x, aSmallBuildings[i].y);
+		}
+	}
+	
+	// Draw Cars
+	for (var i=0; i<aCars.length; i++) {
+		if (carsReady) {
+			ctx.drawImage(carsImage, aCars[i].x, aCars[i].y, 25, 25);
 		}
 	}
 	
