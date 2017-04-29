@@ -6,7 +6,7 @@
 		function(gameService) {
 			var currentData = '';
 			function GameModel() {
-				this.cartData = ''
+				this.gameData = ''
 			};
 
 			GameModel.prototype = (function () {

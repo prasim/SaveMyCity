@@ -113,11 +113,47 @@ var ball = {
 	y: 0,
 	x: 50
 };
+var rect = {
+    x:250,
+    y:350,
+    width:200,
+    height:100
+};
+var buttons = [{
+	top:20,
+   	left:20,
+    width:200,
+    height:100,
+    colour: '#05EFFF',
+    text: 'Add Buildings',
+    funcName: 'addBuilding'
+}]
 var ballsTouched = 0;
 var direction;
 
 // --------------------- Game Objects End -------------------------
 
+var self= this;
+canvas.addEventListener('click', function(event) {
+    var x = event.pageX - canvas.offsetLeft,
+        y = event.pageY - canvas.offsetTop;
+
+    // Collision detection between clicked offset and element.
+    buttons.forEach(function(element) {
+        if (y > element.top && y < element.top + element.height 
+            && x > element.left && x < element.left + element.width) {
+        	self[element.funcName]();
+        }
+    });
+}, false);
+var smallBuildingsX=0;
+var addBuilding = function() {
+	aSmallBuildings.push({
+		x : smallBuildingsX,
+		y : 400
+	});
+	smallBuildingsX += 50;  
+}
 // Handle mouse position
 var mousePos;
 addEventListener('mousemove', function(evt) {
@@ -220,6 +256,12 @@ var render = function () {
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
 	ctx.fillText("Number of balls captured : " + ballsTouched, 32, 32);
+	buttons.forEach(function(button) {
+		var rect = canvas.getContext("2d");
+	    rect.fillStyle = button.colour;
+	    rect.fillRect(button.left, button.top, button.width, button.height);
+	    rect.fillText(button.text,32,32);
+	});
 };
 
 // The main game loop
