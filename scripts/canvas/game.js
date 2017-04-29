@@ -318,10 +318,10 @@ var render = function () {
 	
 	addBuildings(buildings.iNoOfBuildings);
 	updateWaterLevel(50);
-	updatePopulation("1,00,00,000");
+	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
 	updateWaterLevelValue("60,000 feet");
-	updateMoney("20,000 dollars");
+	updateMoney("20,000 dollars");*/
 	
 	if(bTreeButton) {
 		makeButton("Add Trees", 16, function () {console.log("tree");});

@@ -57,7 +57,7 @@ function exp_smoothing(inputArray, alpha){
 					function loadCity(gameData , i ,gameEndYear){
 							if (i==gameEndYear+1){
 								this.gameData = gameData;
-								this.runCity(gameData,i-1,gameEndYear,2);
+								this.runCity(gameData,i-1,gameEndYear,1.8);
 								return;
 							}				
 							
@@ -76,6 +76,9 @@ function exp_smoothing(inputArray, alpha){
 							console.log(_numberOfVechicles+ ' and  '+_numberOfTrees+' and '+_numberOfInitBuildings);
 							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
 							updateNoOfBuildings(_numberOfInitBuildings);
+							updatePopulation(gameData.Population_2010_16[0][i]);
+							updateTemperature(gameData.Temprature[0][i].split(',')[0]);
+							
 							setTimeout(function()
 								{
 										this.loadCity(gameData,i+1,gameEndYear);
@@ -86,7 +89,7 @@ function exp_smoothing(inputArray, alpha){
 					
 					//To be called after starting the game
 					function runCity(gameData , i,gameEndYear,alpha){
-							if (window.exitGame){
+							if (window.exitGame || (gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]))>2){
 								return;
 							}					
 							console.log("City simulation in progress");
@@ -100,6 +103,7 @@ function exp_smoothing(inputArray, alpha){
 							}
 							var _newPopulation = Math.trunc(this.exp_smoothing(_population.slice(_population.length-10,_population.length),alpha)).toString();
 							gameData.Population_2010_16[0][++i] = _newPopulation;
+							
 							//alpha = alpha;
 							//console.log(i+''+gameData.Population_2010_16[0]);
 							//start with these number of buildings
@@ -110,6 +114,12 @@ function exp_smoothing(inputArray, alpha){
 							//_numberOfTrees = Math.trunc(60 - gameData.Temprature[0][i].split(',')[0]);
 							//console.log(_numberOfVechicles+ ' and   and '+_numberOfInitBuildings);
 							updateNoOfBuildings(_numberOfInitBuildings);
+							updatePopulation(gameData.Population_2010_16[0][i]);
+							
+							//Temprature
+							var _newTemprature= Math.trunc((gameData.Population_2010_16[0][i]/gameData.Population_2010_16[0][gameEndYear])*gameData.Temprature[0][gameEndYear].split(',')[0]).toString();
+							updateTemperature(_newTemprature);
+							gameData.Temprature[0][i] = _newTemprature+',';
 							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
 							setTimeout(
 								function() {
