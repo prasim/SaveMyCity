@@ -30,7 +30,7 @@ var waterImage = new Image();
 waterImage.onload = function () {
 	waterReady = true;
 };
-waterImage.src = imgFolder + "Water.jpg";
+waterImage.src = imgFolder + "Water4.png";
 
 // Medium Building image
 var mediumBuildingReady = false;
@@ -262,7 +262,7 @@ var render = function () {
 	}
 	
 	addBuildings(buildings.iNoOfBuildings);
-	updateNoOfBuildings(80);
+	//updateNoOfBuildings(40);
 	
 	for (var i=0; i<aTallBuildings.length; i++) {
 		if (tallBuildingReady) {

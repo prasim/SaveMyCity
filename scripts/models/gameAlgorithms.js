@@ -74,7 +74,10 @@ function exp_smoothing(inputArray, alpha){
 							_numberOfTrees = Math.trunc(60 - gameData.Temprature[0][i].split(',')[0]);
 							console.log(_numberOfVechicles+ ' and  '+_numberOfTrees+' and '+_numberOfInitBuildings);
 							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
-							setTimeout(loadCity(gameData,i+1,gameEndYear),100);
+							updateNoOfBuildings(_numberOfInitBuildings);
+							setTimeout(function(){
+							loadCity(gameData,i+1,gameEndYear)},500);
+							
 					}
 					
 					//To be called after starting the game
@@ -99,7 +102,7 @@ function exp_smoothing(inputArray, alpha){
 							_numberOfTrees = Math.trunc(60 - gameData.Temprature[0][i].split(',')[0]);
 							console.log(_numberOfVechicles+ ' and  '+_numberOfTrees+' and '+_numberOfInitBuildings);
 							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
-							setTimeout(loadCity(gameData,i+1,gameEndYear),100);
+							//setTimeout(loadCity(gameData,i+1,gameEndYear),500);
 					}
 					
 					function exp_smoothing(inputArray, alpha){
