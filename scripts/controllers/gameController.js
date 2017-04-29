@@ -12,7 +12,7 @@
 				$scope.hideProgress = true;
 				$scope.gameAlgorithms = gameAlgorithms.getCurrentInstance();
 				//get current data and start the game
-				$scope.gameAlgorithms.gameData = $scope.gameAlgorithms.getCityData();
+				//$scope.gameAlgorithms.gameData = $scope.gameAlgorithms.getCityData($scope);
 				//run the city after the initial time load
 				//$scope.gameAlgorithms.updateCity($scope.gameAlgorithms.gameData)
 				//var progressGame = setTimeout($scope.gameAlgorithms.updateCity,400);
@@ -28,7 +28,8 @@
 					$timeout((function(scope) {
 						$scope.canvasDisabled = false;
 						main();
-					}), 3000);
+						$scope.gameAlgorithms.gameData = $scope.gameAlgorithms.getCityData($scope);
+					}).bind($scope), 3000);
 				};
 				var increaseProgress = function() {
 					$scope.progressPercentage += 10;
