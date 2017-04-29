@@ -17,6 +17,7 @@
 		<script type="text/javascript" src="scripts/animation.js"></script>
 		<script type="text/javascript" src="scripts/controllers/gameController.js"></script>
 		<script type="text/javascript" src="scripts/models/gameModel.js"></script>
+		<script type="text/javascript" src="scripts/models/gameAlgorithms.js"></script>
 		<script type="text/javascript" src="scripts/services/gameService.js"></script>
 		<script>
 			$( document ).ready(function() {
@@ -34,7 +35,8 @@
 				setTimeout(fnIncreaseProgressBar , 100);
 			}
 			
-			var oProgressBarTimesetTimeout = setTimeout(fnIncreaseProgressBar , 300);
+			//enable it for the progress indicator 
+			//var oProgressBarTimesetTimeout = setTimeout(fnIncreaseProgressBar , 300);
 			 
 			$( window ).on( "load", function() {
 					console.log( "window loaded" );
