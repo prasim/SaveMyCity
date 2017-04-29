@@ -61,6 +61,13 @@ smallBuildingImage.src = imgFolder + "BuildingSmall.png";
 
 // --------------------- Game Objects -------------------------
 
+var city = {
+	currentPopulation: 0,
+	currentWaterLevel: 0,
+	currentTemperature: 0,
+	currentMoney: 0
+};
+
 var buildings = {
 	iNoOfBuildings: 0,
 	threshold: 10,
@@ -112,15 +119,7 @@ var rect = {
     width:200,
     height:100
 };
-var buttons = [{
-	top:20,
-   	left:20,
-    width:200,
-    height:100,
-    colour: '#05EFFF',
-    text: 'Add Buildings',
-    funcName: 'addBuilding'
-}]
+
 var ballsTouched = 0;
 var direction;
 
@@ -190,30 +189,26 @@ var updateWaterLevel = function (percentage) {
 	water.y = water.xLow - (unitWaterLevel * percentage);
 };
 
+var updatePopulation = function (population) {
+	city.currentPopulation = population;
+};
+
+var updateTemperature = function (temperature) {
+	city.currentTemperature = temperature;
+};
+
+var updateWaterLevelValue = function (waterLevel) {
+	city.currentWaterLevel = waterLevel;
+};
+
+var updateMoney = function (money) {
+	city.currentMoney = money;
+};
+
 // --------------------- API functions for updating the Canvas Ends ------------------------
 
 // --------------------- UI Actions --------------------------------
-var self= this;
-canvas.addEventListener('click', function(event) {
-    var x = event.pageX - canvas.offsetLeft,
-        y = event.pageY - canvas.offsetTop;
 
-    // Collision detection between clicked offset and element.
-    buttons.forEach(function(element) {
-        if (y > element.top && y < element.top + element.height 
-            && x > element.left && x < element.left + element.width) {
-        	self[element.funcName]();
-        }
-    });
-}, false);
-var smallBuildingsX=0;
-var addBuilding = function() {
-	aSmallBuildings.push({
-		x : smallBuildingsX,
-		y : 400
-	});
-	smallBuildingsX += 50;  
-}
 /* // Handle mouse position
 var mousePos;
 addEventListener('mousemove', function(evt) {
@@ -270,6 +265,10 @@ var render = function () {
 	
 	addBuildings(buildings.iNoOfBuildings);
 	updateWaterLevel(50);
+	updatePopulation("1,00,00,000");
+	updateTemperature("26 degrees");
+	updateWaterLevelValue("60,000 feet");
+	updateMoney("20,000 dollars");
 	
 	// Draw Tall Buildings
 	for (var i=0; i<aTallBuildings.length; i++) {
@@ -307,27 +306,24 @@ var render = function () {
 	
 	ctx.globalAlpha = 1;
 	
-	// Score
+	// Current Situation of the City 
 	ctx.fillStyle = "rgb(250, 250, 250)";
-	ctx.font = "24px Helvetica";
+	ctx.font = "16px Helvetica";
 	ctx.textAlign = "left";
 	ctx.textBaseline = "top";
-	ctx.fillText("Number of balls captured : " + ballsTouched, 32, 32);
-	buttons.forEach(function(button) {
-		var rect = canvas.getContext("2d");
-	    rect.fillStyle = button.colour;
-	    rect.fillRect(button.left, button.top, button.width, button.height);
-	    rect.fillText(button.text,32,32);
-	});
+	ctx.fillText("Population: " + city.currentPopulation, 16, 16);
+	ctx.fillText("Temperature: " + city.currentTemperature, 16, 40);
+	ctx.fillText("Water Level: " + city.currentWaterLevel, 16, 64);
+	ctx.fillText("Money: " + city.currentMoney, 16, 88);
 	
 	// Life Line
-    var grad = ctx.createLinearGradient(0, 0, 1400, 0);
+    var grad = ctx.createLinearGradient(0, 0, 1100, 0);
     grad.addColorStop(0, lifeLine.lifeLineColor);
     grad.addColorStop(lifeLine.progress, lifeLine.lifeLineColor);
 	grad.addColorStop(lifeLine.progress, lifeLine.backgroundColor);
 	grad.addColorStop(1, lifeLine.backgroundColor);
     ctx.fillStyle = grad;
-    ctx.fillRect(16, 50, 1400, 25);
+    ctx.fillRect(300, 50, 1100, 25);
 };
 
 // ----------------------------- Canvas Rendering Ends -------------------------------------
