@@ -25,7 +25,10 @@ function exp_smoothing(inputArray, alpha){
 			
 			var currentData = '';
 			function GameAlgorithms() {
-				//this.cartData = ''
+				//adding the entire game data
+				this.gameData = "";
+				//newly updated data or temp data
+				this._currentGameData = "";
 			};
 
 			GameAlgorithms.prototype = (function () {
@@ -35,15 +38,24 @@ function exp_smoothing(inputArray, alpha){
 						var self = this,
 							promise = gameService.getGameData();
 						promise.then(function (data) {
-							self.gameData = data.data.Details;
-							self.Population_2010_16 = data.data.NASADATA.cities[0].Population_2010_16[0];
-							//var  = 
-							for(i=2000;i<2017;i++) {
-								console.log(self.Population_2010_16[i]);
-							}
-							console.log('Fetching city data');
+							self._gameData = '';
+							var _data = data.data.NASADATA.cities[0];
+							//self._gameData.Population_2010_16 = _data.Population_2010_16[0];
+							//self._gameData.Temprature = _data.Temprature[0];
+							self.updateCity(data.data.NASADATA.cities[0]);
+							return self._gameData;
+							console.log('Fetching city data complete');
 						})
 					}
+					
+					//To be called on a time series basis
+					function updateCity(gameData){
+							console.log("City simulation in progress");
+							for(i=2000;i<2017;i++) {
+								console.log(gameData.Population_2010_16[0][i]);
+							}
+					}
+					
 					function exp_smoothing(inputArray, alpha){
 						var m1,y1;
 						m1 = inputArray[0];
@@ -57,7 +69,8 @@ function exp_smoothing(inputArray, alpha){
 					}
 					return {
 						getCityData : getCityData,
-						exp_smoothing : exp_smoothing
+						exp_smoothing : exp_smoothing,
+						updateCity : updateCity
 					}
 				})();			
 		 	return {
