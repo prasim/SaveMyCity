@@ -46,6 +46,7 @@ function exp_smoothing(inputArray, alpha){
 							//self._gameData.Population_2010_16 = _data.Population_2010_16[0];
 							//self._gameData.Temprature = _data.Temprature[0];
 							self.loadCity(data.data.NASADATA.cities[0],self.gameBeginYear,self.gameEndYear);
+							localStorage.setItem('exitGame',false)
 							//var oRunSimulation = setTimeout(loadCity(gameData),);
 							return self._gameData;
 							console.log('Fetching city data complete');
@@ -55,16 +56,41 @@ function exp_smoothing(inputArray, alpha){
 					//To be called on a time series basis
 					function loadCity(gameData , i ,gameEndYear){
 							if (i==gameEndYear+1){
+								
+								return;
+							}				
+							
+							var _population = [];
+							var _numberOfInitBuildings;
+							//to find new population
+							/*for (this.gameBeginYear;i<=gameEndYear;i++) {
+								_population.push(gameData.Population_2010_16[0][i]);								
+							}*/
+							//start with these number of buildings
+							_numberOfInitBuildings = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/40));
+							_numberOfVechicles = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/30));
+							
+							//number of tress - the current temprature
+							_numberOfTrees = Math.trunc(60 - gameData.Temprature[0][i].split(',')[0]);
+							console.log(_numberOfVechicles+ ' and  '+_numberOfTrees+' and '+_numberOfInitBuildings);
+							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
+							setTimeout(loadCity(gameData,i+1,gameEndYear),100);
+					}
+					
+					//To be called after starting the game
+					function runCity(gameData , i ,gameEndYear){
+							if (window.exitGame){
 								return;
 							}					
 							console.log("City simulation in progress");
 							//var i = 	;
 							var _population = [];
 							var _numberOfInitBuildings;
-							/*for (this.gameBeginYear;i<2017;i++) {
+							for (this.gameBeginYear;i<=gameEndYear;i++) {
 								_population.push(gameData.Population_2010_16[0][i]);
 								console.log(gameData.Population_2010_16[0][i]);
-							}*/
+							}
+							
 							//start with these number of buildings
 							_numberOfInitBuildings = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/40));
 							_numberOfVechicles = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/30));
