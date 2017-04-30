@@ -103,16 +103,35 @@ function exp_smoothing(inputArray, alpha){
 					
 					function calculateLifeLine(gameData, i){
 						window.tresholdMonitor = {};
-						tresholdMonitor.populationThreshold="11781204";
-						tresholdMonitor.tempratureThreshold="55";
+						tresholdMonitor.populationThreshold="28781204";
+						tresholdMonitor.tempratureThreshold="45";
 						tresholdMonitor.waterLevelThreshold="3000";
 						tresholdMonitor.treeCount = "10";
 						fShareInLifeLine = Object.keys(tresholdMonitor).length /18;
+						
 						window.populationShareInLifeLine = .06;
 						
-						var lifeLine = (tresholdMonitor.populationThreshold / gameData.Population_2010_16[0][i]) * populationShareInLifeLine +
-						(tresholdMonitor.tempratureThreshold / gameData.Temprature[0][i].split(',')[0]) * fShareInLifeLine +
-						(gameData.GroundWaterLevel[0][i]/tresholdMonitor.waterLevelThreshold) * fShareInLifeLine;
+						
+						window.tempratureShareInLifeLine = fShareInLifeLine;
+						window.waterShareInLifeLine = fShareInLifeLine;
+						
+						if (gameData.Population_2010_16[0][i] > tresholdMonitor.populationThreshold){
+							window.populationShareInLifeLine = .03;
+						}
+						
+						if (gameData.Temprature[0][i].split(',')[0] > tresholdMonitor.tempratureThreshold){
+							window.tempratureShareInLifeLine = .1;
+						}
+						if (gameData.GroundWaterLevel[0][i] > tresholdMonitor.waterLevelThreshold){
+							window.waterShareInLifeLine =  .1;
+						}
+						var lifeLine = ( gameData.Population_2010_16[0][i] / tresholdMonitor.populationThreshold  ) * populationShareInLifeLine +
+						(tresholdMonitor.tempratureThreshold / gameData.Temprature[0][i].split(',')[0]) * tempratureShareInLifeLine +
+						(gameData.GroundWaterLevel[0][i]/tresholdMonitor.waterLevelThreshold) * waterShareInLifeLine;
+						
+						if(lifeLine*100 < 25){
+							window.exitGame = true;
+						}
 						
 						return Math.trunc(lifeLine*100);
 					}
@@ -132,6 +151,7 @@ function exp_smoothing(inputArray, alpha){
 					//To be called after starting the game
 					function runCity(gameData , i,gameEndYear,alpha){
 							if (window.exitGame || (gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]))>3){
+								alert('stop');
 								return;
 							}					
 							console.log("City simulation in progress");
@@ -162,7 +182,7 @@ function exp_smoothing(inputArray, alpha){
 							
 							//Temprature
 							var totalnumberTrees = 80;
-							_oldNumber = Math.trunc(100 - gameData.Temprature[0][i-1].split(',')[0]*1.3);
+							_oldNumber = Math.trunc(100 - gameData.Temprature[0][i-1].split(',')[0]*1.2);
 							var _newTemprature= Math.trunc((gameData.Population_2010_16[0][i-1]/gameData.Population_2010_16[0][gameEndYear])*gameData.Temprature[0][gameEndYear].split(',')[0]).toString();
 							_newTemprature = _newTemprature - (retriveNoOfTrees() - _defaultNumberTrees)*.2;
 							
@@ -191,12 +211,13 @@ function exp_smoothing(inputArray, alpha){
 							
 							
 							var lifeLine = this.calculateLifeLine(gameData , i);
+							console.log(lifeLine);
 							updateProgressBar(lifeLine);
 							
 							setTimeout(
 								function() {
 										this.runCity(gameData,i,gameEndYear,alpha);
-								}.bind(this),1500);							
+								}.bind(this),500);							
 					}
 					
 					function exp_smoothing(inputArray, alpha){
