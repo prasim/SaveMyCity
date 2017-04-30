@@ -57,7 +57,7 @@ function exp_smoothing(inputArray, alpha){
 					function loadCity(gameData , i ,gameEndYear){
 							if (i==gameEndYear+1){
 								this.gameData = gameData;
-								this.runCity(gameData,i-1,gameEndYear,1.8);
+								this.runCity(gameData,i-1,gameEndYear,1.9);
 								return;
 							}				
 							
@@ -79,13 +79,52 @@ function exp_smoothing(inputArray, alpha){
 							updatePopulation(gameData.Population_2010_16[0][i]);
 							updateTemperature(gameData.Temprature[0][i].split(',')[0]);
 							
+							//find percentage for water level
+							var sArrayWaterLevel = sortArray(gameData.GroundWaterLevel[0],this.gameBeginYear,this.gameEndYear); 
+							//taking 30% of the water level for simulation
+							waterPercentage = ((gameData.GroundWaterLevel[0][i] - sArrayWaterLevel[0])/(sArrayWaterLevel[sArrayWaterLevel.length-1] - sArrayWaterLevel[0]))*30;
+							updateWaterLevel(100 - Math.trunc(waterPercentage));
+							updateWaterLevelValue(gameData.GroundWaterLevel[0][i] + " ft");
+							
+							
+							//updating life line 
+							var lifeLine = this.calculateLifeLine(gameData , i);
+							updateProgressBar(lifeLine);
+							
 							setTimeout(function()
 								{
 										this.loadCity(gameData,i+1,gameEndYear);
 								
-								}.bind(this),50);
+								}.bind(this),500);
 							
 					}
+					
+					function calculateLifeLine(gameData, i){
+						window.tresholdMonitor = {};
+						tresholdMonitor.populationThreshold="11781204";
+						tresholdMonitor.tempratureThreshold="55";
+						tresholdMonitor.waterLevelThreshold="3000";
+						fShareInLifeLine = Object.keys(tresholdMonitor).length /18;
+						window.populationShareInLifeLine = .05;
+						
+						var lifeLine = (tresholdMonitor.populationThreshold / gameData.Population_2010_16[0][i]) * populationShareInLifeLine +
+						(tresholdMonitor.tempratureThreshold / gameData.Temprature[0][i].split(',')[0]) * fShareInLifeLine +
+						(gameData.GroundWaterLevel[0][i]/tresholdMonitor.waterLevelThreshold) * fShareInLifeLine;
+						
+						return Math.trunc(lifeLine*100);
+					}
+					
+					function sortArray(obj,i,j){
+							var sortedArrary = [];
+							for (i;i<=j;i++) {
+								sortedArrary.push( parseInt(Math.trunc(obj[i])));
+								//console.log(_population);
+							}
+							sortedArrary = sortedArrary.sort(function(a, b){return a-b});
+							//console.log(sortedArrary);
+							return sortedArrary;
+					}
+					
 					
 					//To be called after starting the game
 					function runCity(gameData , i,gameEndYear,alpha){
@@ -120,7 +159,15 @@ function exp_smoothing(inputArray, alpha){
 							var _newTemprature= Math.trunc((gameData.Population_2010_16[0][i]/gameData.Population_2010_16[0][gameEndYear])*gameData.Temprature[0][gameEndYear].split(',')[0]).toString();
 							updateTemperature(_newTemprature);
 							gameData.Temprature[0][i] = _newTemprature+',';
-							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
+							
+							//WaterLevel - consider number of trees here
+							var sArrayWaterLevel = sortArray(gameData.GroundWaterLevel[0],this.gameBeginYear,this.gameEndYear); 
+							//taking 30% of the water level for simulation
+							waterPercentage = ((gameData.GroundWaterLevel[0][i] - sArrayWaterLevel[0])/(sArrayWaterLevel[sArrayWaterLevel.length-1] - sArrayWaterLevel[0]))*30;
+							updateWaterLevel(100 - Math.trunc(waterPercentage));
+							updateWaterLevelValue(gameData.GroundWaterLevel[0][i] + " ft");
+							
+							
 							setTimeout(
 								function() {
 										this.runCity(gameData,i,gameEndYear,alpha);
@@ -142,7 +189,9 @@ function exp_smoothing(inputArray, alpha){
 						getCityData : getCityData,
 						exp_smoothing : exp_smoothing,
 						loadCity : loadCity,
-						runCity : runCity
+						runCity : runCity,
+						sortArray : sortArray,
+						calculateLifeLine :calculateLifeLine
 					}
 				})();			
 		 	return {
