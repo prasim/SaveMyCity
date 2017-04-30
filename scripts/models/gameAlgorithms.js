@@ -131,7 +131,7 @@ function exp_smoothing(inputArray, alpha){
 					
 					//To be called after starting the game
 					function runCity(gameData , i,gameEndYear,alpha){
-							if (window.exitGame || (gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]))>2){
+							if (window.exitGame || (gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]))>3){
 								return;
 							}					
 							console.log("City simulation in progress");
@@ -180,8 +180,12 @@ function exp_smoothing(inputArray, alpha){
 							var sArrayWaterLevel = sortArray(gameData.GroundWaterLevel[0],this.gameBeginYear,this.gameEndYear); 
 							//taking 30% of the water level for simulation
 							waterPercentage = ((gameData.GroundWaterLevel[0][i-1] - sArrayWaterLevel[0])/(sArrayWaterLevel[sArrayWaterLevel.length-1] - sArrayWaterLevel[0]))*30;
-							gameData.GroundWaterLevel[0][i] = (sArrayWaterLevel[sArrayWaterLevel.length-1] - 3*(retriveNoOfTrees()-_defaultNumberTrees) + 
-							Math.trunc((gameData.Population_2010_16[0][i-1]/gameData.Population_2010_16[0][gameEndYear] ))*50).toString(); 
+							/*gameData.GroundWaterLevel[0][i] = (sArrayWaterLevel[sArrayWaterLevel.length-1] - 3*(retriveNoOfTrees()-_defaultNumberTrees) + 
+							Math.trunc((gameData.Population_2010_16[0][i]/gameData.Population_2010_16[0][gameEndYear] ))*50).toString(); 
+							*/
+							gameData.GroundWaterLevel[0][i] = (Math.trunc((gameData.Population_2010_16[0][i]/gameData.Population_2010_16[0][gameEndYear] ) *
+							gameData.GroundWaterLevel[0][gameEndYear])).toString();
+							
 							updateWaterLevel(100 - Math.trunc(waterPercentage));
 							updateWaterLevelValue(gameData.GroundWaterLevel[0][i] + " ft");
 							
