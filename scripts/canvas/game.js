@@ -112,6 +112,8 @@ var aSolarPanels = [];
 
 var aWindMills = [];
 
+var aTrees = [];
+
 var water = {
 	xHigh: 560,
 	xLow: 768,
@@ -252,6 +254,28 @@ var addWindMills = function (iNoOfWindMills) {
 
 var retriveNoOfWindMills = function () {
 	return aWindMills.length;
+};
+
+var addTrees = function (iNoOfTrees) {
+	aTrees.splice(0, aTrees.length);
+	var x=240, y=450, xLim=1290;
+	for(var i = 0; i < iNoOfTrees; i++) {
+		aTrees.push({
+			x: x,
+			y: y
+		});
+		if ((x + 20) <= xLim) {
+			x+=20;
+		}
+	}
+};
+
+var retriveNoOfTrees = function () {
+	return aTrees.length;
+};
+
+var updateNoOfTrees = function (iNoOfTrees) {
+	addTrees(iNoOfTrees);
 };
 
 var updateWaterLevel = function (percentage) {
@@ -395,7 +419,9 @@ var render = function () {
 	updateMoney("20,000 dollars");*/
 	
 	if(bTreeButton) {
-		makeButton("Add Trees", 16, function () {console.log("tree");});
+		makeButton("Add Trees", 16, function () {
+			addTrees(aTrees.length + 1);
+		});
 		bTreeButton = false;
 	}
 	drawButton("Add Trees");
@@ -463,6 +489,13 @@ var render = function () {
 	for (var i=0; i<aWindMills.length; i++) {
 		if (windmillReady) {
 			ctx.drawImage(windmillImage, aWindMills[i].x, aWindMills[i].y, 25, 25);
+		}
+	}
+	
+	// Draw Trees
+	for (var i=0; i<aTrees.length; i++) {
+		if (treeReady) {
+			ctx.drawImage(treeImage, aTrees[i].x, aTrees[i].y, 25, 25);
 		}
 	}
 	
