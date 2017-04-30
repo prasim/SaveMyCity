@@ -106,21 +106,13 @@ var aSmallBuildings = [];
 
 var aTallBuildings = [];
 
-var aCars = [{
-	x:0,
-	y:487,
-	direction: 'right',
-},
-{
-	x:50,
-	y:487,
-	direction: 'right',
-},
-{
-	x:canvas.width,
-	y:515,
-	direction: 'left',
-}];
+var aCars = [];
+
+var aSolarPanels = [];
+
+var aWindMills = [];
+
+var aTrees = [];
 
 var water = {
 	xHigh: 560,
@@ -201,6 +193,89 @@ var updateNoOfBuildings = function (iNoOfBuildings) {
 
 var retriveNoOfBuildings = function () {
 	return buildings.iNoOfBuildings;
+};
+
+var addCars = function (iNoOfCars) {
+	if (iNoOfCars > aCars.length) {
+		for(var i = 0; i < (iNoOfCars - aCars.length); i++) {
+			var carSpec = {
+				x: (aCars.length > 1) ? (aCars[aCars.length - 2].direction === 'right') ? aCars[aCars.length - 2].x + 50 : aCars[aCars.length - 2].x - 50 : canvas.width,
+				y: (aCars.length > 0 && aCars[aCars.length - 1].direction === 'right') ? 515 : 487,
+				direction: (aCars.length > 0 && aCars[aCars.length - 1].direction === 'right') ? 'left' : 'right',
+			};
+			aCars.push(carSpec);
+		}
+	} else {
+		aCars.splice(0, aCars.length - iNoOfCars);
+	}
+};
+
+var retriveNoOfCars = function () {
+	return aCars.length;
+};
+
+var addSolarPanels = function (iNoOfSolarPanels) {
+	aSolarPanels.splice(0, aSolarPanels.length);
+	var x=0, y=320, xLim=230;
+	for(var i = 0; i < iNoOfSolarPanels; i++) {
+		aSolarPanels.push({
+			x: x,
+			y: y
+		});
+		if ((x + 20) <= xLim) {
+			x+=20;
+		} else {
+			x=0;
+			y+=20;
+		}
+	}
+};
+
+var retriveNoOfSolarPanels = function () {
+	return aSolarPanels.length;
+};
+
+var addWindMills = function (iNoOfWindMills) {
+	aWindMills.splice(0, aWindMills.length);
+	var x=1300, y=320, xLim=canvas.width;
+	for(var i = 0; i < iNoOfWindMills; i++) {
+		aWindMills.push({
+			x: x,
+			y: y
+		});
+		if ((x + 20) <= xLim) {
+			x+=20;
+		} else {
+			x=1300;
+			y+=20;
+		}
+	}
+};
+
+var retriveNoOfWindMills = function () {
+	return aWindMills.length;
+};
+
+var addTrees = function (iNoOfTrees) {
+	aTrees.splice(0, aTrees.length);
+	var x=240, y=460, xLim=1290;
+	for(var i = 0; i < iNoOfTrees; i++) {
+		aTrees.push({
+			x: x,
+			y: y
+		});
+		if ((x + 20) <= xLim) {
+			x+=20;
+		}
+	}
+};
+
+var retriveNoOfTrees = function () {
+	return aTrees.length;
+};
+
+var updateNoOfTrees = function (iNoOfTrees) {
+	addTrees(iNoOfTrees);
 };
 
 var updateWaterLevel = function (percentage) {
@@ -307,7 +382,6 @@ canvas.addEventListener('mousemove', function(evt) {
 
 // Moving the Ball
 var update = function (modifier) {
-	
 	/*cars Movement*/
 	aCars.forEach(function(car) {
 		if(car.direction == 'left'){
@@ -325,7 +399,6 @@ var update = function (modifier) {
 		}
         
     });
-
 };
 
 // ----------------------------- Canvas Rendering -------------------------------------
@@ -336,33 +409,43 @@ var render = function () {
 	}
 	
 	addBuildings(buildings.iNoOfBuildings);
+	addSolarPanels(aSolarPanels.length);
 	updateProgressBar(10);
 	updateWaterLevel(50);
+	//addCars(10);
 	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
 	updateWaterLevelValue("60,000 feet");
 	updateMoney("20,000 dollars");*/
 	
 	if(bTreeButton) {
-		makeButton("Add Trees", 16, function () {console.log("tree");});
+		makeButton("Add Trees", 16, function () {
+			addTrees(aTrees.length + 1);
+		});
 		bTreeButton = false;
 	}
 	drawButton("Add Trees");
 	
 	if(bWindmillButton) {
-		makeButton("Add Windmill", 74, function () {console.log("windmill");});
+		makeButton("Add Windmill", 74, function () {
+			addWindMills(aWindMills.length + 1);
+		});
 		bWindmillButton = false;
 	}
 	drawButton("Add Windmill");
 	
 	if(bSolarPanelButton) {
-		makeButton("Add Solar Panel", 132, function () {console.log("solar panel");});
+		makeButton("Add Solar Panel", 132, function () {
+			addSolarPanels(aSolarPanels.length + 1);
+		});
 		bSolarPanelButton = false;
 	}
 	drawButton("Add Solar Panel");
 	
 	if(bSolarCarsButton) {
-		makeButton("Add Solar Cars", 190, function () {console.log("solar cars");});
+		makeButton("Add Solar Cars", 190, function () {
+			addCars(aCars.length + 1);
+		});
 		bSolarCarsButton = false;
 	}
 	drawButton("Add Solar Cars");
@@ -392,6 +475,27 @@ var render = function () {
 	for (var i=0; i<aCars.length; i++) {
 		if (carsReady) {
 			ctx.drawImage(carsImage, aCars[i].x, aCars[i].y, 25, 25);
+		}
+	}
+	
+	// Draw Solar Panels
+	for (var i=0; i<aSolarPanels.length; i++) {
+		if (solarPanelReady) {
+			ctx.drawImage(solarPanelImage, aSolarPanels[i].x, aSolarPanels[i].y, 25, 25);
+		}
+	}
+	
+	// Draw WindMills
+	for (var i=0; i<aWindMills.length; i++) {
+		if (windmillReady) {
+			ctx.drawImage(windmillImage, aWindMills[i].x, aWindMills[i].y, 25, 25);
+		}
+	}
+	
+	// Draw Trees
+	for (var i=0; i<aTrees.length; i++) {
+		if (treeReady) {
+			ctx.drawImage(treeImage, aTrees[i].x, aTrees[i].y, 25, 25);
 		}
 	}
 	
