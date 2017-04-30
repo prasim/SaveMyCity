@@ -410,8 +410,8 @@ var render = function () {
 	
 	addBuildings(buildings.iNoOfBuildings);
 	addSolarPanels(aSolarPanels.length);
-	updateProgressBar(10);
-	updateWaterLevel(50);
+	//updateProgressBar(10);
+	//updateWaterLevel(50);
 	//addCars(10);
 	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
