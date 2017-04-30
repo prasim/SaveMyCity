@@ -131,6 +131,8 @@ var water = {
 	y: 560
 };
 
+var bGameOver = false;
+
 var lifeLine = {
 	progress: 0,
 	backgroundColor: "#e9f6fb",
@@ -598,8 +600,17 @@ var main = function () {
 	render();
 	
 	then = now;
-	// Request to do this again ASAP
-	requestAnimationFrame(main);
+	if (bGameOver) {
+		// Current Situation of the City 
+		ctx.fillStyle = "rgb(250, 250, 250)";
+		ctx.font = "128px Times New Roman";
+		ctx.textAlign = "left";
+		ctx.textBaseline = "top";
+		ctx.fillText("Game Over", 480, 300);
+	} else {
+		// Request to do this again ASAP
+		requestAnimationFrame(main);
+	}
 };
 
 // Cross-browser support for requestAnimationFrame

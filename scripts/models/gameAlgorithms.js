@@ -151,7 +151,7 @@ function exp_smoothing(inputArray, alpha){
 					//To be called after starting the game
 					function runCity(gameData , i,gameEndYear,alpha){
 							if (window.exitGame || (gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]))>3){
-								alert('stop');
+								bGameOver = true;
 								return;
 							}					
 							console.log("City simulation in progress");
