@@ -71,14 +71,16 @@ function exp_smoothing(inputArray, alpha){
 							_numberOfInitBuildings = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/40));
 							_numberOfVechicles = Math.trunc(gameData.Population_2010_16[0][i]/(gameData.Population_2010_16[0][gameEndYear]/30));
 							
+							window._defaultNumberTrees;
 							//number of tress - the current temprature
-							_numberOfTrees = Math.trunc(60 - gameData.Temprature[0][i].split(',')[0]);
+							_numberOfTrees = Math.trunc(100 - gameData.Temprature[0][i].split(',')[0]*1.3);
 							console.log(_numberOfVechicles+ ' and  '+_numberOfTrees+' and '+_numberOfInitBuildings);
 							//var oRunSimulation = setTimeout(loadCity(gameData,i+1),300);
 							updateNoOfBuildings(_numberOfInitBuildings);
 							updatePopulation(gameData.Population_2010_16[0][i]);
 							updateTemperature(gameData.Temprature[0][i].split(',')[0]);
-							
+							updateNoOfTrees(_numberOfTrees);
+							_defaultNumberTrees = _numberOfTrees;
 							//find percentage for water level
 							var sArrayWaterLevel = sortArray(gameData.GroundWaterLevel[0],this.gameBeginYear,this.gameEndYear); 
 							//taking 30% of the water level for simulation
@@ -95,7 +97,7 @@ function exp_smoothing(inputArray, alpha){
 								{
 										this.loadCity(gameData,i+1,gameEndYear);
 								
-								}.bind(this),500);
+								}.bind(this),100);
 							
 					}
 					
@@ -104,8 +106,9 @@ function exp_smoothing(inputArray, alpha){
 						tresholdMonitor.populationThreshold="11781204";
 						tresholdMonitor.tempratureThreshold="55";
 						tresholdMonitor.waterLevelThreshold="3000";
+						tresholdMonitor.treeCount = "10";
 						fShareInLifeLine = Object.keys(tresholdMonitor).length /18;
-						window.populationShareInLifeLine = .05;
+						window.populationShareInLifeLine = .06;
 						
 						var lifeLine = (tresholdMonitor.populationThreshold / gameData.Population_2010_16[0][i]) * populationShareInLifeLine +
 						(tresholdMonitor.tempratureThreshold / gameData.Temprature[0][i].split(',')[0]) * fShareInLifeLine +
@@ -141,7 +144,9 @@ function exp_smoothing(inputArray, alpha){
 								//console.log(_population);
 							}
 							var _newPopulation = Math.trunc(this.exp_smoothing(_population.slice(_population.length-10,_population.length),alpha)).toString();
-							gameData.Population_2010_16[0][++i] = _newPopulation;
+							
+							//updates 
+							gameData.Population_2010_16[0][++i] = (parseInt(_newPopulation) + parseInt(gameData.Population_2010_16[0][this.gameBeginYear]/10)).toString();
 							
 							//alpha = alpha;
 							//console.log(i+''+gameData.Population_2010_16[0]);
@@ -156,17 +161,33 @@ function exp_smoothing(inputArray, alpha){
 							updatePopulation(gameData.Population_2010_16[0][i]);
 							
 							//Temprature
-							var _newTemprature= Math.trunc((gameData.Population_2010_16[0][i]/gameData.Population_2010_16[0][gameEndYear])*gameData.Temprature[0][gameEndYear].split(',')[0]).toString();
+							var totalnumberTrees = 80;
+							_oldNumber = Math.trunc(100 - gameData.Temprature[0][i-1].split(',')[0]*1.3);
+							var _newTemprature= Math.trunc((gameData.Population_2010_16[0][i-1]/gameData.Population_2010_16[0][gameEndYear])*gameData.Temprature[0][gameEndYear].split(',')[0]).toString();
+							_newTemprature = _newTemprature - (retriveNoOfTrees() - _defaultNumberTrees)*.2;
+							
+							
+							//_defaultNumberTrees
+							//since we are just adding  , reference value not required
+							_newTemprature = _newTemprature - retriveNoOfSolarPanels()*.3;
+							_newTemprature = _newTemprature - retriveNoOfCars()*.3;
+							_newTemprature = _newTemprature - retriveNoOfWindMills()*.3;
+							
 							updateTemperature(_newTemprature);
 							gameData.Temprature[0][i] = _newTemprature+',';
 							
 							//WaterLevel - consider number of trees here
 							var sArrayWaterLevel = sortArray(gameData.GroundWaterLevel[0],this.gameBeginYear,this.gameEndYear); 
 							//taking 30% of the water level for simulation
-							waterPercentage = ((gameData.GroundWaterLevel[0][i] - sArrayWaterLevel[0])/(sArrayWaterLevel[sArrayWaterLevel.length-1] - sArrayWaterLevel[0]))*30;
+							waterPercentage = ((gameData.GroundWaterLevel[0][i-1] - sArrayWaterLevel[0])/(sArrayWaterLevel[sArrayWaterLevel.length-1] - sArrayWaterLevel[0]))*30;
+							gameData.GroundWaterLevel[0][i] = (sArrayWaterLevel[sArrayWaterLevel.length-1] - 3*(retriveNoOfTrees()-_defaultNumberTrees) + 
+							Math.trunc((gameData.Population_2010_16[0][i-1]/gameData.Population_2010_16[0][gameEndYear] ))*50).toString(); 
 							updateWaterLevel(100 - Math.trunc(waterPercentage));
 							updateWaterLevelValue(gameData.GroundWaterLevel[0][i] + " ft");
 							
+							
+							var lifeLine = this.calculateLifeLine(gameData , i);
+							updateProgressBar(lifeLine);
 							
 							setTimeout(
 								function() {
