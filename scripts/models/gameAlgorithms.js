@@ -97,7 +97,7 @@ function exp_smoothing(inputArray, alpha){
 								{
 										this.loadCity(gameData,i+1,gameEndYear);
 								
-								}.bind(this),100);
+								}.bind(this),1500);
 							
 					}
 					
@@ -131,6 +131,7 @@ function exp_smoothing(inputArray, alpha){
 						
 						if(lifeLine*100 < 25){
 							window.exitGame = true;
+							return 8;
 						}
 						
 						return Math.trunc(lifeLine*100);
@@ -217,7 +218,7 @@ function exp_smoothing(inputArray, alpha){
 							setTimeout(
 								function() {
 										this.runCity(gameData,i,gameEndYear,alpha);
-								}.bind(this),500);							
+								}.bind(this),1500);							
 					}
 					
 					function exp_smoothing(inputArray, alpha){
