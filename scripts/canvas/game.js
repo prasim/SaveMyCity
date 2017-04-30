@@ -258,7 +258,7 @@ var retriveNoOfWindMills = function () {
 
 var addTrees = function (iNoOfTrees) {
 	aTrees.splice(0, aTrees.length);
-	var x=240, y=450, xLim=1290;
+	var x=240, y=460, xLim=1290;
 	for(var i = 0; i < iNoOfTrees; i++) {
 		aTrees.push({
 			x: x,
