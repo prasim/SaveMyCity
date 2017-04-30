@@ -134,7 +134,10 @@ var water = {
 var lifeLine = {
 	progress: 0,
 	backgroundColor: "#e9f6fb",
-	lifeLineColor: "#008000"
+	lifeLineColor: "#008000",
+	normal: "#008000",
+	danger: "#ff0000",
+	warning: "#ff4500"
 };
 
 var oButtons = {};
@@ -327,6 +330,13 @@ var updateMoney = function (money) {
 
 var updateProgressBar = function (percentage) {
 	lifeLine.progress = (percentage / 100);
+	if(lifeLine.progress > 0.40) {
+		lifeLine.lifeLineColor = lifeLine.normal;
+	} else if (lifeLine.progress <= 0.40 && lifeLine.progress > 0.10) {
+		lifeLine.lifeLineColor = lifeLine.warning;
+	} else {
+		lifeLine.lifeLineColor = lifeLine.danger;
+	}
 };
 
 // --------------------- API functions for updating the Canvas Ends ------------------------
