@@ -56,6 +56,14 @@ solarPanelImage.onload = function () {
 };
 solarPanelImage.src = imgFolder + "solarPanel.png";
 
+// Cloud image
+var cloudReady = false;
+var cloudImage = new Image();
+cloudImage.onload = function () {
+	cloudReady = true;
+};
+cloudImage.src = imgFolder + "cloud.png";
+
 // Medium Building image
 var mediumBuildingReady = false;
 var mediumBuildingImage = new Image();
@@ -114,6 +122,8 @@ var aWindMills = [];
 
 var aTrees = [];
 
+var aClouds = [];
+
 var water = {
 	xHigh: 560,
 	xLow: 768,
@@ -133,6 +143,7 @@ var bTreeButton = true;
 var bSolarCarsButton = true;
 var bWindmillButton = true;
 var bSolarPanelButton = true;
+var bClouds = true;
 var direction;
 
 // --------------------- Game Objects End -------------------------
@@ -258,7 +269,7 @@ var retriveNoOfWindMills = function () {
 
 var addTrees = function (iNoOfTrees) {
 	aTrees.splice(0, aTrees.length);
-	var x=240, y=460, xLim=1290;
+	var x=0, y=460, xLim=canvas.width;
 	for(var i = 0; i < iNoOfTrees; i++) {
 		aTrees.push({
 			x: x,
@@ -266,6 +277,9 @@ var addTrees = function (iNoOfTrees) {
 		});
 		if ((x + 20) <= xLim) {
 			x+=20;
+		} else {
+			x=0;
+			y=520;
 		}
 	}
 };
@@ -276,6 +290,18 @@ var retriveNoOfTrees = function () {
 
 var updateNoOfTrees = function (iNoOfTrees) {
 	addTrees(iNoOfTrees);
+};
+
+var addClouds = function (iNoOfClouds) {
+	aClouds.splice(0, aClouds.length);
+	var x=0;
+	for(var i = 0; i < iNoOfClouds; i++) {
+		aClouds.push({
+			x: x,
+			y: 120
+		});
+		x+=250;
+	}
 };
 
 var updateWaterLevel = function (percentage) {
@@ -399,6 +425,14 @@ var update = function (modifier) {
 		}
         
     });
+	
+	/* For Clouds*/
+	for(var i = 0; i < aClouds.length; i++) {
+		aClouds[i].x += 1;
+		if (aClouds[i].x > canvas.width) {
+			aClouds[i].x = 0;
+		}
+	}
 };
 
 // ----------------------------- Canvas Rendering -------------------------------------
@@ -410,13 +444,24 @@ var render = function () {
 	
 	addBuildings(buildings.iNoOfBuildings);
 	addSolarPanels(aSolarPanels.length);
-	//updateProgressBar(10);
+	//updateProgressBar(100);
 	//updateWaterLevel(50);
 	//addCars(10);
 	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
 	updateWaterLevelValue("60,000 feet");
 	updateMoney("20,000 dollars");*/
+	if (bClouds) {
+		addClouds(6);
+		bClouds = false;
+	}
+	
+	// Clouds
+	for (var i=0; i<aClouds.length; i++) {
+		if (cloudReady) {
+			ctx.drawImage(cloudImage, aClouds[i].x, aClouds[i].y);
+		}
+	}
 	
 	if(bTreeButton) {
 		makeButton("Add Trees", 16, function () {
@@ -529,6 +574,7 @@ var render = function () {
 	grad.addColorStop(1, lifeLine.backgroundColor);
     ctx.fillStyle = grad;
     ctx.fillRect(450, 50, 600, 25);
+	
 };
 
 // ----------------------------- Canvas Rendering Ends -------------------------------------
