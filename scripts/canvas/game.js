@@ -106,21 +106,7 @@ var aSmallBuildings = [];
 
 var aTallBuildings = [];
 
-var aCars = [{
-	x:0,
-	y:487,
-	direction: 'right',
-},
-{
-	x:50,
-	y:487,
-	direction: 'right',
-},
-{
-	x:canvas.width,
-	y:515,
-	direction: 'left',
-}];
+var aCars = [];
 
 var water = {
 	xHigh: 560,
@@ -193,6 +179,25 @@ var addBuildings = function (iNoOfBuildings) {
 		buildings.threshold += 1;
 		addBuildings(currentBuildings);
 	}
+};
+
+var addCars = function (iNoOfCars) {
+	if (iNoOfCars > aCars.length) {
+		for(var i = 0; i < (iNoOfCars - aCars.length); i++) {
+			var carSpec = {
+				x: (aCars.length > 1) ? (aCars[aCars.length - 2].direction === 'right') ? aCars[aCars.length - 2].x + 50 : aCars[aCars.length - 2].x - 50 : canvas.width,
+				y: (aCars.length > 0 && aCars[aCars.length - 1].direction === 'right') ? 515 : 487,
+				direction: (aCars.length > 0 && aCars[aCars.length - 1].direction === 'right') ? 'left' : 'right',
+			};
+			aCars.push(carSpec);
+		}
+	} else {
+		aCars.splice(0, aCars.length - iNoOfCars);
+	}
+};
+
+var retriveNoOfCars = function () {
+	return aCars.length;
 };
 
 var updateNoOfBuildings = function (iNoOfBuildings) {
@@ -307,7 +312,6 @@ canvas.addEventListener('mousemove', function(evt) {
 
 // Moving the Ball
 var update = function (modifier) {
-	
 	/*cars Movement*/
 	aCars.forEach(function(car) {
 		if(car.direction == 'left'){
@@ -325,7 +329,6 @@ var update = function (modifier) {
 		}
         
     });
-
 };
 
 // ----------------------------- Canvas Rendering -------------------------------------
@@ -338,6 +341,7 @@ var render = function () {
 	addBuildings(buildings.iNoOfBuildings);
 	updateProgressBar(10);
 	updateWaterLevel(50);
+	//addCars(10);
 	/*updatePopulation("1,00,00,000");
 	updateTemperature("26 degrees");
 	updateWaterLevelValue("60,000 feet");
@@ -362,7 +366,9 @@ var render = function () {
 	drawButton("Add Solar Panel");
 	
 	if(bSolarCarsButton) {
-		makeButton("Add Solar Cars", 190, function () {console.log("solar cars");});
+		makeButton("Add Solar Cars", 190, function () {
+			addCars(aCars.length + 1);
+		});
 		bSolarCarsButton = false;
 	}
 	drawButton("Add Solar Cars");
