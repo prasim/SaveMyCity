@@ -133,7 +133,7 @@ var water = {
 
 var lifeLine = {
 	progress: 0,
-	backgroundColor: "#000000",
+	backgroundColor: "#e9f6fb",
 	lifeLineColor: "#008000"
 };
 
@@ -563,8 +563,8 @@ var render = function () {
 	ctx.fillText("Money: " + city.currentMoney, 16, 88);
 	
 	// Life Line Text
-	ctx.font = "32px Times New Roman";
-	ctx.fillText("Your Life Line", 630, 16);
+	ctx.font = "22px Times New Roman";
+	ctx.fillText("Your Life Line", 670, 16);
 	
 	// Life Line
     var grad = ctx.createLinearGradient(450, 0, 1050, 0);
